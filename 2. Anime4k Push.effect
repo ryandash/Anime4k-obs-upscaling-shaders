@@ -1,0 +1,202 @@
+// MIT License
+
+// Copyright (c) 2019 bloc97
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+// Always provided by OBS
+uniform float4x4 ViewProj<
+	bool automatic = true;
+>;
+
+// Provided by Stream Effects
+uniform float4 Time<
+	bool automatic = true;
+>;
+uniform float4 ViewSize<
+	bool automatic = true;
+>;
+uniform texture2d InputA<
+	bool automatic = true;
+>;
+
+uniform float _pVerticalEdge<
+	string name = "Vertical Edge %";
+	string field_type = "slider";
+	float scale = 0.01;
+	float minimum = 0.0;
+	float maximum = 100.0;
+> = 50.0;
+
+uniform float _pSize<
+	string name = "Step Size (px)";
+	string field_type = "slider";
+	float scale = 1.0;
+	float minimum = 0.5;
+	float maximum = 128.0;
+	float step = 0.5;
+> = 16.0;
+
+uniform float _pBarSize<
+	string name = "Bar Size (px)";
+	string field_type = "slider";
+	float scale = 1.0;
+	float minimum = 0.5;
+	float maximum = 128.0;
+	float step = 0.5;
+> = 1.0;
+
+uniform texture2d _PreviousPass<
+	string name = "Previous Pass";
+	string field_type = "input";
+>;
+
+uniform float _pStrength<
+	string name = "strength";
+	string field_type = "slider";
+	float scale = 0.1;
+	float minimum = 0.1;
+	float maximum = 1.0;
+	float step = 0.1;
+> = 0.3;
+
+#define parens(x) ((x)) 
+
+#define dx parens(1/(float)ViewSize.x)
+#define dy parens(1/(float)ViewSize.y)
+
+// ---------- Shader Code
+sampler_state def_sampler {
+	AddressU  = Wrap;
+	AddressV  = Wrap;
+	Filter    = Linear;
+};
+
+struct VertFragData {
+	float4 pos : POSITION;
+	float2 uv  : TEXCOORD0;
+};
+
+VertFragData VSDefault(VertFragData vtx) {
+	vtx.pos = mul(float4(vtx.pos.xyz, 1.0), ViewProj);
+	return vtx;
+}
+
+float4 getLargest(float4 cc, float4 lightestColor, float4 a, float4 b, float4 c) {
+	float4 newColor = cc * (1 - _pStrength) + ((a + b + c) / 3) * _pStrength;
+	if (newColor[3] > lightestColor[3]) {
+		return newColor;
+	}
+	return lightestColor;
+}
+
+float min3(float4 a, float4 b, float4 c) {
+	return min(min(a[3], b[3]), c[3]);
+}
+
+float max3(float4 a, float4 b, float4 c) {
+	return max(max(a[3], b[3]), c[3]);
+}
+
+float4 getSample(float2 pos) {
+	return float4(InputA.Sample(def_sampler, pos).rgb, _PreviousPass.Sample(def_sampler, pos).a);
+}
+
+float4 PSDefault(VertFragData vtx, texture2d _PreviousPass) : TARGET {
+	float4 cc = getSample(vtx.uv);
+	float4 t = getSample(vtx.uv + float2(0, -dy));
+	float4 tl = getSample(vtx.uv + float2(-dx, -dy));
+	float4 tr = getSample(vtx.uv + float2(dx, -dy));
+	
+	float4 l = getSample(vtx.uv + float2(-dx, 0));
+	float4 r = getSample(vtx.uv + float2(dx, 0));
+	
+	float4 b = getSample(vtx.uv + float2(0, dy));
+	float4 bl = getSample(vtx.uv + float2(-dx, dy));
+	float4 br = getSample(vtx.uv + float2(dx, dy));
+	
+	float4 lightestColor = cc;
+
+	//Kernel 0 and 4
+	float maxDark = max3(br, b, bl);
+	float minLight = min3(tl, t, tr);
+	
+	if (minLight > cc[3] && minLight > maxDark) {
+		lightestColor = getLargest(cc, lightestColor, tl, t, tr);
+	} else {
+		maxDark = max3(tl, t, tr);
+		minLight = min3(br, b, bl);
+		if (minLight > cc[3] && minLight > maxDark) {
+			lightestColor = getLargest(cc, lightestColor, br, b, bl);
+		}
+	}
+
+	//Kernel 1 and 5
+	maxDark = max3(cc, l, b);
+	minLight = min3(r, t, tr);
+	
+	if (minLight > maxDark) {
+		lightestColor = getLargest(cc, lightestColor, r, t, tr);
+	} else {
+		maxDark = max3(cc, r, t);
+		minLight = min3(bl, l, b);
+		if (minLight > maxDark) {
+			lightestColor = getLargest(cc, lightestColor, bl, l, b);
+		}
+	}
+	
+	//Kernel 2 and 6
+	maxDark = max3(l, tl, bl);
+	minLight = min3(r, br, tr);
+	
+	if (minLight > cc[3] && minLight > maxDark) {
+		lightestColor = getLargest(cc, lightestColor, r, br, tr);
+	} else {
+		maxDark = max3(r, br, tr);
+		minLight = min3(l, tl, bl);
+		if (minLight > cc[3] && minLight > maxDark) {
+			lightestColor = getLargest(cc, lightestColor, l, tl, bl);
+		}
+	}
+	
+	//Kernel 3 and 7
+	maxDark = max3(cc, l, t);
+	minLight = min3(r, br, b);
+	
+	if (minLight > maxDark) {
+		lightestColor = getLargest(cc, lightestColor, r, br, b);
+	} else {
+		maxDark = max3(cc, r, b);
+		minLight = min3(t, l, tl);
+		if (minLight > maxDark) {
+			lightestColor = getLargest(cc, lightestColor, t, l, tl);
+		}
+	}
+
+	return lightestColor;
+}
+
+technique Draw
+{
+	pass
+	{
+		vertex_shader = VSDefault(vtx);
+		pixel_shader  = PSDefault(vtx, _PreviousPass); 
+	}
+}
