@@ -1,0 +1,69 @@
+// Always provided by OBS 
+uniform float4x4 ViewProj< 
+	bool automatic = true; 
+>; 
+ 
+// Provided by Stream Effects 
+uniform float4 Time< 
+	bool automatic = true; 
+>; 
+uniform float4 ViewSize< 
+	bool automatic = true; 
+>; 
+ 
+uniform texture2d _PreviousPass1< 
+    string name = "Previous Pass1"; 
+    string field_type = "input"; 
+>; 
+ 
+uniform texture2d _PreviousPass2< 
+    string name = "Previous Pass2"; 
+    string field_type = "input"; 
+>; 
+ 
+ 
+float4 PSDefault(VertFragData vtx, texture2d _PreviousPass1, texture2d _PreviousPass2) : TARGET { 
+// ---------- Shader Code 
+sampler_state def_sampler { 
+	AddressU  = Wrap; 
+	AddressV  = Wrap; 
+	Filter    = Linear; 
+}; 
+ 
+struct VertFragData { 
+	float4 pos : POSITION; 
+	float2 uv  : TEXCOORD0; 
+}; 
+ 
+VertFragData VSDefault(VertFragData vtx) { 
+	vtx.pos = mul(float4(vtx.pos.xyz, 1.0), ViewProj); 
+	return vtx; 
+} 
+ 
+float4 mat4(float a, float b, float c, float d, float e, float f, float g, float h, float i, float j, float k, float l, float m, float n, float o, float p){ 
+	float4 column1=float4(a,b,c,d); 
+	float4 column2=float4(e,f,g,h); 
+	float4 column3=float4(i,j,k,l); 
+	float4 column4=float4(m,n,o,p); 
+	return float4(column1 + column2 + column3 + column4); 
+} 
+ 
+#define parens(x) ((x)) 
+ 
+    float2 f0 = fract(conv2d_last_tf_pos * conv2d_last_tf_size); 
+    ifloat2 i0 = ifloat2(f0 * float2(2.0)); 
+    float c0 = conv2d_last_tf_tex((float2(0.5) - f0) * conv2d_last_tf_pt + conv2d_last_tf_pos)[i0.y * 2 + i0.x]; 
+    float c1 = c0; 
+    float c2 = c1; 
+    float c3 = c2; 
+    return float4(c0, c1, c2, c3) + InputA.Sample(def_sampler, vtx.uv); 
+} 
+ 
+technique Draw 
+{ 
+    pass 
+    { 
+        vertex_shader = VSDefault(vtx); 
+        pixel_shader = PSDefault(vtx, _PreviousPass1, _PreviousPass2); 
+    } 
+} 
