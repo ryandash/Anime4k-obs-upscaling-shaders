@@ -15,13 +15,5 @@ VertFragData VSDefault(VertFragData vtx) {
 	return vtx;
 }
 
-float4 mat4(float a, float b, float c, float d, float e, float f, float g, float h, float i, float j, float k, float l, float m, float n, float o, float p){
-	float4 column1=float4(a,b,c,d);
-	float4 column2=float4(e,f,g,h);
-	float4 column3=float4(i,j,k,l);
-	float4 column4=float4(m,n,o,p);
-	return float4(column1 + column2 + column3 + column4);
-}
-
 #define parens(x) ((x))
 

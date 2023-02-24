@@ -1,69 +1,62 @@
-// Always provided by OBS 
-uniform float4x4 ViewProj< 
-	bool automatic = true; 
->; 
- 
-// Provided by Stream Effects 
-uniform float4 Time< 
-	bool automatic = true; 
->; 
-uniform float4 ViewSize< 
-	bool automatic = true; 
->; 
- 
-uniform texture2d _PreviousPass1< 
-    string name = "Previous Pass1"; 
+// Always provided by OBS
+uniform float4x4 ViewProj<
+	bool automatic = true;
+>;
+
+// Provided by Stream Effects
+uniform float4 Time<
+	bool automatic = true;
+>;
+
+uniform float4 ViewSize<
+	bool automatic = true;
+>;
+
+uniform texture2d _Main< 
+    string name = "Main"; 
     string field_type = "input"; 
->; 
- 
-// ---------- Shader Code 
-sampler_state def_sampler { 
-	AddressU  = Wrap; 
-	AddressV  = Wrap; 
-	Filter    = Linear; 
-}; 
- 
-struct VertFragData { 
-	float4 pos : POSITION; 
-	float2 uv  : TEXCOORD0; 
-}; 
- 
-VertFragData VSDefault(VertFragData vtx) { 
-	vtx.pos = mul(float4(vtx.pos.xyz, 1.0), ViewProj); 
-	return vtx; 
-} 
- 
-float4 mat4(float a, float b, float c, float d, float e, float f, float g, float h, float i, float j, float k, float l, float m, float n, float o, float p){ 
-	float4 column1=float4(a,b,c,d); 
-	float4 column2=float4(e,f,g,h); 
-	float4 column3=float4(i,j,k,l); 
-	float4 column4=float4(m,n,o,p); 
-	return float4(column1 + column2 + column3 + column4); 
-} 
- 
-#define parens(x) ((x)) 
- 
-#define go_0(pos, x_off, y_off) parens(_PreviousPass1.Sample(def_sampler, pos + float2(x_off, y_off))) 
- 
-float4 PSDefault(VertFragData vtx, texture2d _PreviousPass1) : TARGET { 
-    float4 result = mat4(0.1690102, -0.2560719, 0.39658326, -0.3679659, -0.27616683, -0.35619372, -0.3748396, 0.08430813, -0.29574734, -0.31511316, -0.09773105, 0.13616018, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, -1.0, -1.0); 
-    result += mat4(-0.1326393, -0.259433, 0.025070239, 0.58914864, -0.036478516, 0.30723435, 0.007458902, 0.012962684, 0.2493056, 0.13007334, -0.08448256, -0.38414413, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, -1.0, 0.0); 
-    result += mat4(-0.11539356, 0.35253766, 0.26143202, 0.2760807, -0.09371543, -0.028165473, -0.028452158, -0.27050856, 0.06718067, -0.0056619495, -0.17654495, 0.17288211, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, -1.0, 1.0); 
-    result += mat4(-0.16145481, -0.3204927, -0.54317135, 0.11830119, 0.49315026, 0.12008072, 0.50857407, -0.30382085, 0.25807253, 0.020755528, 0.29388228, 0.106109895, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, 0.0, -1.0); 
-    result += mat4(-0.22728722, 0.50484747, -0.07904469, 0.33114597, 0.50306976, -0.22760947, 0.14773269, 0.17628263, 0.14788547, -0.08223464, -0.10880935, -0.3151985, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, 0.0, 0.0); 
-    result += mat4(0.3414351, 0.057279214, -0.14419858, 0.09761111, -0.11794496, 0.021717256, -0.22750235, 0.13986664, -0.38932344, 0.28996095, 0.3773904, 0.13175532, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, 0.0, 1.0); 
-    result += mat4(0.1376552, -0.19587159, -0.35147396, -0.097646296, 0.1686707, -0.14385861, 0.031198, 0.12383533, -0.23089902, 0.08707301, 0.3362293, -0.100579016, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, 1.0, -1.0); 
-    result += mat4(-0.056774966, 0.047585852, -0.36395878, -0.20211312, 0.4077735, 0.12631284, 0.39813092, -0.033365678, 0.2307249, -0.09131807, 0.20823865, 0.31084216, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, 1.0, 0.0); 
-    result += mat4(-0.12456089, 0.09755632, 0.31490886, -0.06579996, -0.13386595, 0.07564795, -0.26605195, -0.075180635, -0.11182657, 0.06757017, -0.14351276, -0.16828312, 0.0, 0.0, 0.0, 0.0) * go_0(vtx.uv, 1.0, 1.0); 
-    result += float4(-0.046043985, 0.055581126, -0.08791638, -0.13022089); 
-    return result; 
-} 
- 
-technique Draw 
-{ 
-    pass 
-    { 
-        vertex_shader = VSDefault(vtx); 
-        pixel_shader = PSDefault(vtx, _PreviousPass1); 
-    } 
-} 
+>;
+
+// ---------- Shader Code
+sampler_state def_sampler {
+	AddressU  = Wrap;
+	AddressV  = Wrap;
+	Filter    = Linear;
+};
+
+struct VertFragData {
+	float4 pos : POSITION;
+	float2 uv  : TEXCOORD0;
+};
+
+VertFragData VSDefault(VertFragData vtx) {
+	vtx.pos = mul(float4(vtx.pos.xyz, 1.0), ViewProj);
+	return vtx;
+}
+
+#define parens(x) ((x))
+
+#define go_0(pos, x_off, y_off) parens(_PreviousPass1.Sample(def_sampler, pos + float2(x_off, y_off)))
+
+float4 PSDefault(VertFragData vtx, texture2d _Main) : TARGET {
+    float4 result = mul(float4x4(0.1690102, -0.2560719, 0.39658326, -0.3679659, -0.27616683, -0.35619372, -0.3748396, 0.08430813, -0.29574734, -0.31511316, -0.09773105, 0.13616018, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, -1.0, -1.0));
+    result += mul(float4x4(-0.1326393, -0.259433, 0.025070239, 0.58914864, -0.036478516, 0.30723435, 0.007458902, 0.012962684, 0.2493056, 0.13007334, -0.08448256, -0.38414413, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, -1.0, 0.0));
+    result += mul(float4x4(-0.11539356, 0.35253766, 0.26143202, 0.2760807, -0.09371543, -0.028165473, -0.028452158, -0.27050856, 0.06718067, -0.0056619495, -0.17654495, 0.17288211, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, -1.0, 1.0));
+    result += mul(float4x4(-0.16145481, -0.3204927, -0.54317135, 0.11830119, 0.49315026, 0.12008072, 0.50857407, -0.30382085, 0.25807253, 0.020755528, 0.29388228, 0.106109895, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, 0.0, -1.0));
+    result += mul(float4x4(-0.22728722, 0.50484747, -0.07904469, 0.33114597, 0.50306976, -0.22760947, 0.14773269, 0.17628263, 0.14788547, -0.08223464, -0.10880935, -0.3151985, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, 0.0, 0.0));
+    result += mul(float4x4(0.3414351, 0.057279214, -0.14419858, 0.09761111, -0.11794496, 0.021717256, -0.22750235, 0.13986664, -0.38932344, 0.28996095, 0.3773904, 0.13175532, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, 0.0, 1.0));
+    result += mul(float4x4(0.1376552, -0.19587159, -0.35147396, -0.097646296, 0.1686707, -0.14385861, 0.031198, 0.12383533, -0.23089902, 0.08707301, 0.3362293, -0.100579016, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, 1.0, -1.0));
+    result += mul(float4x4(-0.056774966, 0.047585852, -0.36395878, -0.20211312, 0.4077735, 0.12631284, 0.39813092, -0.033365678, 0.2307249, -0.09131807, 0.20823865, 0.31084216, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, 1.0, 0.0));
+    result += mul(float4x4(-0.12456089, 0.09755632, 0.31490886, -0.06579996, -0.13386595, 0.07564795, -0.26605195, -0.075180635, -0.11182657, 0.06757017, -0.14351276, -0.16828312, 0.0, 0.0, 0.0, 0.0), go_0(vtx.uv, 1.0, 1.0));
+    result += float4(-0.046043985, 0.055581126, -0.08791638, -0.13022089);
+    return result;
+}
+
+technique Draw
+{
+    pass
+    {
+        vertex_shader = VSDefault(vtx);
+        pixel_shader = PSDefault(vtx, _Main);
+    }
+}
