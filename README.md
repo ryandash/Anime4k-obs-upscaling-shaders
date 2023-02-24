@@ -33,6 +33,3 @@ Before                     |  After
 
 ## Hopes for upgraded shaders
 - While it is possible to upgrade these shader to V4.0.1, it will require a LOT of time and effort with changing glsl to hlsl because of the limits of obs, as well as creating new files for each new glsl file and even more new files each time glsl hooks are used. If the most recent shaders were converted to remove the glsl hooks or the hlsl shaders were updated then I would probably be able to easily upgrade these shaders. I will be spending time here and there trying to upgrade these shaders but it may never happen.
-
-## Current Progress with Updating to V4.0.1
-- Shaders have been tested and work up to 2. Anime4K_Restore_CNN_VL17.effect but are currently too intensive to run on most computers

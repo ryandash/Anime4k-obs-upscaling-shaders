@@ -59,7 +59,7 @@ float4 mat4(float a, float b, float c, float d, float e, float f, float g, float
 } 
  
 #define parens(x) ((x)) 
-float4 PSDefault(VertFragData vtx, texture2d _PreviousPass1, texture2d _PreviousPass2, texture2d _PreviousPass3, texture2d _PreviousPass4) : TARGET {
+ 
     float2 f0 = fract(conv2d_last_tf_pos * conv2d_last_tf_size); 
     ifloat2 i0 = ifloat2(f0 * float2(2.0)); 
     float c0 = conv2d_last_tf_tex((float2(0.5) - f0) * conv2d_last_tf_pt + conv2d_last_tf_pos)[i0.y * 2 + i0.x]; 
