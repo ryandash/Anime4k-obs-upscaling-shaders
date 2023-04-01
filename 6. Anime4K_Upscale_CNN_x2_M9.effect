@@ -1,0 +1,43 @@
+// Always provided by OBS
+uniform float4x4 ViewProj<
+	bool automatic = true;
+>;
+
+// Provided by Stream Effects
+uniform float4 Time<
+	bool automatic = true;
+>;
+
+uniform float4 ViewSize<
+	bool automatic = true;
+>;
+
+uniform texture2d _Main< 
+    string name = "Main"; 
+    string field_type = "input"; 
+>;
+
+uniform texture2d _PreviousPass1<
+    string name = "Previous Pass1";
+    string field_type = "input";
+>;
+
+
+float4 PSDefault(VertFragData vtx, texture2d _Main, texture2d _PreviousPass1) : TARGET {
+    float2 f0 = frac(conv2d_last_tf_pos, conv2d_last_tf_size);
+    int2 i0 = int2(f0, float2(2.0));
+    float c0 = conv2d_last_tf_tex((float2(0.5) - f0), conv2d_last_tf_pt + conv2d_last_tf_pos)[i0.y, 2 + i0.x];
+    float c1 = c0;
+    float c2 = c1;
+    float c3 = c2;
+    return float4(c0, c1, c2, c3) + _Main.Sample(def_sampler, vtx.uv);
+}
+
+technique Draw
+{
+    pass
+    {
+        vertex_shader = VSDefault(vtx);
+        pixel_shader = PSDefault(vtx, _Main, _PreviousPass1);
+    }
+}

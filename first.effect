@@ -1,0 +1,18 @@
+// Always provided by OBS
+uniform float4x4 ViewProj<
+	bool automatic = true;
+>;
+
+// Provided by Stream Effects
+uniform float4 Time<
+	bool automatic = true;
+>;
+
+uniform float4 ViewSize<
+	bool automatic = true;
+>;
+
+uniform texture2d _Main< 
+    string name = "Main"; 
+    string field_type = "input"; 
+>;
