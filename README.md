@@ -1,7 +1,7 @@
 # Anime4k V0.9 hlsl obs shaders
 These are Anime4k V0.9 hlsl shaders for obs to improve the quality of the preview and stream.
 
-# Original shader that I modified can be found at [bloc97/Anime4k](https://github.com/bloc97/Anime4K/releases?q=v0.9&expanded=true)
+# Original shader can be found at [bloc97/Anime4k](https://github.com/bloc97/Anime4K/releases?q=v0.9&expanded=true)
 
 ## How to use shaders (This is how I use the shaders with my capture card on obs):
 1. To use these shaders, I used the [StreamFX](https://github.com/Xaymar/obs-StreamFX) plugin's shader filter but other plugins may work as well.
