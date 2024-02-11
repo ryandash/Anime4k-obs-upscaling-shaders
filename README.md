@@ -31,5 +31,5 @@ Before                     |  After
 :-------------------------:|:-------------------------:
 ![Before](https://user-images.githubusercontent.com/56605453/219844596-00b29804-ce85-44d8-a319-46dd9945f84d.png)   |  ![After](https://user-images.githubusercontent.com/56605453/219844600-8f6b2785-3c49-42f9-8699-bc309edb1e09.png)
 
-## Upgdated shaders?
-- While it is possible to upgrade these shader to V4.0.1, it will require a LOT of time and effort with changing glsl to hlsl because of the limits of obs, as well as creating new files for each new glsl file and even more new files each time glsl hooks are used. If the most recent shaders were converted to remove the glsl hooks or the hlsl shaders were updated then I would probably be able to easily upgrade these shaders. I will be spending time here and there trying to upgrade these shaders but it may never happen.
+## Updated shaders?
+- While it is possible to upgrade these shader to V4.0.1, it will require a LOT of time and effort with changing glsl to hlsl because of the limits of obs. If the most recent shaders were converted to remove the glsl hooks or the hlsl shaders were updated then I would probably be able to easily upgrade these shaders. I will be spending time here and there trying to upgrade these shaders but it may never happen.
