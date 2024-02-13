@@ -5,11 +5,11 @@ These are Anime4k V0.9 hlsl shaders for obs to improve the quality of the previe
 
 ## How to use shaders (This is how I use the shaders with my capture card on obs):
 1. To use these shaders, I used the [StreamFX](https://github.com/Xaymar/obs-StreamFX) plugin's shader filter but other plugins may work as well.
-2. Start by download and installing [obs](https://github.com/obsproject/obs-studio/releases) followed by streamFX or your plugin that supports shaders. NOTE: As of the time of writing this, the latest OBS did not work with streamFX for some unkown reason. I used [OBS version 27.2.4](https://github.com/obsproject/obs-studio/releases/tag/27.2.4) along with [streamFX version 0.11.1](https://github.com/Xaymar/obs-StreamFX/releases/tag/0.11.1)
+2. Start by downloading and installing [obs](https://github.com/obsproject/obs-studio/releases) followed by streamFX or your plugin that supports shaders. NOTE: As of the time of writing this, the latest OBS did not work with streamFX for some unknown reason. I used [OBS version 27.2.4](https://github.com/obsproject/obs-studio/releases/tag/27.2.4) along with [streamFX version 0.11.1](https://github.com/Xaymar/obs-StreamFX/releases/tag/0.11.1)
 3. Starting obs, you should now have an option in the top menu for streamFX, if you do not then you may need to install a different version of either obs or streamFX to make things work
 4. In sources add a Video Capture Device and 4 source mirrors that mirror the Video Capture Device
 5. Adjust your capture card using the properties to get the best possible balance of resolution and fps that you can
-6. For the Video Capture Device and the 4 source mirrors, use a transform -> fit to screen to make all of the windows fit the preview screen.
+6. For the Video Capture Device and the 4 source mirrors, use a transform -> fit to screen to make all the windows fit the preview screen.
 7. On shader mirrors 1 to 4, add a shader filter, and set each shader filter to use the corresponding numbered shader from the repository.
 8. On Shader mirrors 2 to 4, there should be an option to select the Previous Pass. 
     - Under type select Source
