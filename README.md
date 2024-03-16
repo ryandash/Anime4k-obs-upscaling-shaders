@@ -11,7 +11,7 @@ These are Anime4k V0.9 hlsl shaders for obs to improve the quality of the previe
 5.  For the Video Capture Device and the 4 source clones, use a transform -> fit to screen to make all the windows fit the preview screen.
 6.  On source clones 1 to 4, add a shader filter, and set each shader filter to use the corresponding numbered shader from the repository.
     - The clones should look something like this:
-	<img width="195" alt="image" src="https://github.com/ryandash/Anime4k-obs-upscaling-shaders/assets/56605453/49b88dec-ea99-4f5c-aa0a-2d935c985641">
+	<img width="500" alt="image" src="https://github.com/ryandash/Anime4k-obs-upscaling-shaders/assets/56605453/49b88dec-ea99-4f5c-aa0a-2d935c985641">
 7.  On source clones 2 to 4, there should be an option to select the Previous Pass. 
     - Using the dropdown select the previous numbered source clone
 	- Your Sources should look like this:
